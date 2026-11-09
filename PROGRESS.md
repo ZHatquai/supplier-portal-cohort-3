@@ -5,7 +5,7 @@
 **Session:** 1
 **Last updated:** 9 November 2026
 **Live URL:** none yet [Rule: fill in after the first successful deploy]
-**First deploy:** not yet [Rule: the date the first pull request was merged with all builder checks passing; a record only]
+**First deploy:** 9 November 2026 (checks passed on the Deploy Preview; merge pending) [Rule: the date the first pull request was merged with all builder checks passing; a record only]
 **Stage:** business logic and database [Rule: one of business logic and database / second screen and access design / login and access rules together / deploy and maintain. Decided by what exists, never by a week or version. This tool has no database, so it stays on the first stage.]
 
 ## Plan for this session
@@ -20,14 +20,11 @@ Session 1 (9 November 2026): ran First Session Setup, built the whole page, ran 
 [Rule: 3 to 5 lines maximum. Replace each session.]
 
 ## Remaining work
-- [ ] First build, before the pull request: the builder connects the repo to a Netlify site (Add new project, Import an existing project, GitHub, this repo; Branch to deploy: main)
-- [ ] Push the branch and confirm it reached GitHub; open the pull request (or give the builder the prefilled compare link) and give the builder its link
-- [ ] Builder checks: on request, the builder rows of docs/checks.md as a numbered list of actions; record the results; fix failures in this session
 - [ ] Builder: merge the pull request and delete the branch, then main deploys. Claude Code never merges. The builder sends the site address; Claude Code checks the live site and records it as Live URL next session. This session is then done.
 [Rule: completed items leave this list and are absorbed into Current state. This list only shrinks.]
 
 ## Check results
-9 November 2026, verifier, branch claude/keen-gates-p71k7k: D1 to D7 PASS; S1, S2, S4, S5, S10, S12 PASS; secrets clean; no protected files edited. Findings fixed after the report: the "Ask once" callout is now Linen; the footer line reads "The Corporate, Group Procurement and EHS and Sustainability"; the section labels no longer repeat the headings. Builder rows (S1 to S12 on the Deploy Preview) are still to run. S10 needs real fonts, so check it where Google Fonts loads. Verdict: ready for the builder's checks.
+9 November 2026, verifier, branch claude/keen-gates-p71k7k: D1 to D7 PASS; S1, S2, S4, S5, S10, S12 PASS; secrets clean; no protected files edited. Findings fixed after the report: the "Ask once" callout is now Linen; the footer line reads "The Corporate, Group Procurement and EHS and Sustainability"; the section labels no longer repeat the headings. Builder rows S1 to S12 on the Deploy Preview: all PASS, 9 November 2026 (reported by the builder). Verdict: ready for the builder's checks.
 [Rule: the verifier's report per phase and per branch, with the date: one line per row, PASS or FAIL, and the builder's rows as performed. Kept, never cleared. A FAIL is fixed in the tool and re-run, never edited away.]
 
 ## Build decisions
