@@ -12,20 +12,14 @@
 (Approved 9 November 2026.) Lane: first build. 1) First Session Setup (done). 2) Build site/index.html, css/, js/ section by section: hero, 01, 02, 03, 04, footer. 3) Run docs/checks.md data and screen rows (headless Chromium, desktop and 360px), then the verifier. 4) Push, open the pull request, builder connects Netlify, builder checks on the Deploy Preview, builder merges. Risks: lime exactly twice, A Path new tab, workbook byte-identical, no internal-only terms.
 
 ## Current state
-Nothing built. Repo contains CLAUDE.md, PROGRESS.md, product-spec.md, intent.md, checks.md, .claude/settings.json, the-corporate-brand.md (brand skill, installed in session 1) and reference/ (the questionnaire workbook).
+Page built in site/ (index.html, css/styles.css, js/main.js, downloads/ with the workbook, byte-identical to reference/). All six blocks present: hero, 01 to 04, footer. netlify.toml publishes site/ and forces the download. Data checks D1 to D7 pass. Screen behaviour verified in headless Chromium at 1280px and 360px. Not yet deployed.
 [Rule: describes what exists and works right now, never what is planned. Completed checklist items are absorbed here in compressed form.]
 
 ## Last session
-None. The first build session has not happened yet.
+Session 1 (9 November 2026): ran First Session Setup, built the whole page, ran data checks and a browser pass of the screen checks. Open: verifier run, then pull request.
 [Rule: 3 to 5 lines maximum. Replace each session.]
 
 ## Remaining work
-- [ ] Build Header and hero, with the lime deadline badge and Start button, in site/index.html, css/ and js/, then copy the workbook into site/downloads/ unchanged, then run its rows in docs/checks.md and the verifier
-- [ ] Build 01 Overview: four figures and six themes, then run its rows in docs/checks.md and the verifier
-- [ ] Build 02 Why we are contacting you: three cards and the "Ask once" callout, then run its rows in docs/checks.md and the verifier
-- [ ] Build 03 How this works: two route cards and the four-phase 2027 timeline, then run its rows in docs/checks.md and the verifier
-- [ ] Build 04 What you can do: the question, the A Path and the B Path with its download and email links, then run its rows in docs/checks.md and the verifier
-- [ ] Build Footer: contact and the standing privacy line, then run its rows in docs/checks.md and the verifier
 - [ ] Checks pass for this stage: every row in docs/checks.md shows a pass dated today; the verifier's report pasted under Check results
 - [ ] First build, before the pull request: the builder connects the repo to a Netlify site (Add new project, Import an existing project, GitHub, this repo; Branch to deploy: main)
 - [ ] Push the branch and confirm it reached GitHub; open the pull request (or give the builder the prefilled compare link) and give the builder its link
@@ -37,6 +31,9 @@ None. The first build session has not happened yet.
 None yet. [Rule: the verifier's report per phase and per branch, with the date: one line per row, PASS or FAIL, and the builder's rows as performed. Kept, never cleared. A FAIL is fixed in the tool and re-run, never edited away.]
 
 ## Build decisions
+- Fonts load from Google Fonts only; in a blocked network the page falls back to Georgia and system sans.
+- Header and nav are sticky on desktop and static on phones. Label and muted text use #6f6a5b (a darkened Stone) because Stone #B6B09F on Chalk fails AA contrast.
+- Footer is Ink with Chalk text (no accent). The choice buttons show the chosen one as Ink fill.
 - Governor decision: the deployed folder is site/, not the repo root, so docs/, reference/ and .claude/ are never served on the public URL.
 [Rule: one line per decision made during the build that is not in the spec. Future sessions depend on these to stay consistent.]
 

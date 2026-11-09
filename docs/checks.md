@@ -9,13 +9,13 @@ Known input in, known result out. This tool has no database, so these run agains
 
 | # | Given (fixture or action) | Expected result | Performed by | Last result |
 |---|---------------------------|-----------------|--------------|-------------|
-| D1 | The built site's `/downloads/` file compared with `reference/The_Corporate_Supplier_Questionnaire_2026_39.xlsx` | Identical bytes (checksum match). The file opens and its sheet "Supplier Assessment 2026" has 7 sections, S1 to S7. | Claude Code, verifier | |
-| D2 | The "Return by email" link in the built HTML | `href` starts with `mailto:inbox@thecorporate.com`, contains a subject, and has no other recipient | Claude Code, verifier | |
-| D3 | The "Go to EcoVadis" link in the built HTML | `href` is `https://ecovadis.com`, `target="_blank"`, `rel` contains `noopener` | Claude Code, verifier | |
-| D4 | Search the built output and the repo for `ecovadis`, `inbox@`, `api_key`, `secret`, `token`, `eyJ`, and for the strings `690,000`, `RACI`, `15 business days`, `escalat` | The two intended links appear. No credential string appears. None of the four internal-only terms appears in any page text. | Claude Code, verifier | |
-| D5 | Timeline text | Shows April 2027, 30 September 2027, Q4 2027 and Q1 2028, and no 2026 date | Claude Code, verifier | |
-| D6 | The four figures | 71%, 500+, 2045 and 50% appear, and no other tCO2e figure appears | Claude Code, verifier | |
-| D7 | `netlify.toml` and the deployed folder | `publish = "site"` with no build command; the site folder holds only index.html, css, js, assets and downloads, so nothing under docs/, reference/ or .claude/ is served | Claude Code, verifier | |
+| D1 | The built site's `/downloads/` file compared with `reference/The_Corporate_Supplier_Questionnaire_2026_39.xlsx` | Identical bytes (checksum match). The file opens and its sheet "Supplier Assessment 2026" has 7 sections, S1 to S7. | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D2 | The "Return by email" link in the built HTML | `href` starts with `mailto:inbox@thecorporate.com`, contains a subject, and has no other recipient | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D3 | The "Go to EcoVadis" link in the built HTML | `href` is `https://ecovadis.com`, `target="_blank"`, `rel` contains `noopener` | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D4 | Search the built output and the repo for `ecovadis`, `inbox@`, `api_key`, `secret`, `token`, `eyJ`, and for the strings `690,000`, `RACI`, `15 business days`, `escalat` | The two intended links appear. No credential string appears. None of the four internal-only terms appears in any page text. | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D5 | Timeline text | Shows April 2027, 30 September 2027, Q4 2027 and Q1 2028, and no 2026 date | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D6 | The four figures | 71%, 500+, 2045 and 50% appear, and no other tCO2e figure appears | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D7 | `netlify.toml` and the deployed folder | `publish = "site"` with no build command; the site folder holds only index.html, css, js, assets and downloads, so nothing under docs/, reference/ or .claude/ is served | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
 
 ## Screen checks
 What must be visible and what must happen. The builder does these on the Deploy Preview; the verifier does the ones it can see.
