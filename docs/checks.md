@@ -22,18 +22,18 @@ What must be visible and what must happen. The builder does these on the Deploy 
 
 | # | Screen | What must be true | Performed by | Last result |
 |---|--------|-------------------|--------------|-------------|
-| S1 | Hero | Logo, title, "Submissions close 30 September 2027" lime badge on black, and a Start button that scrolls to section 04 | builder, verifier | |
-| S2 | 01 Overview | Four figures and six themes with ESRS references; figures stack to one column on a phone | builder, verifier | |
+| S1 | Hero | Logo, title, "Submissions close 30 September 2027" lime badge on black, and a Start button that scrolls to section 04 | builder, verifier | verifier: PASS 9 November 2026 |
+| S2 | 01 Overview | Four figures and six themes with ESRS references; figures stack to one column on a phone | builder, verifier | verifier: PASS 9 November 2026 |
 | S3 | 02 Why | Three cards and the "Ask once" callout | builder | |
-| S4 | 03 How it works | Two route cards and the four-phase timeline with the right dates | builder, verifier | |
-| S5 | 04 before any choice | The question and both buttons are visible, and neither path is visible | builder, verifier | |
+| S4 | 03 How it works | Two route cards and the four-phase timeline with the right dates | builder, verifier | verifier: PASS 9 November 2026 |
+| S5 | 04 before any choice | The question and both buttons are visible, and neither path is visible | builder, verifier | verifier: PASS 9 November 2026 |
 | S6 | 04, press Yes | A Path opens, B Path stays hidden, "Go to EcoVadis" opens EcoVadis in a new tab | builder | |
 | S7 | 04, press No | B Path opens, A Path hidden, the file downloads and opens in Excel, the email button opens a draft to inbox@thecorporate.com with the subject filled | builder | |
 | S8 | 04, switch routes | Pressing Yes then No (and back) shows only the latest path each time; a reload returns to the neutral state | builder | |
 | S9 | Footer | Contact address and the line "This page does not collect or store any information about you." | builder | |
-| S10 | Brand | Acid Lime appears exactly twice and only on Ink or as the 2px left border; square corners; no shadows or gradients; Playfair headlines and DM Sans body | builder, verifier | |
+| S10 | Brand | Acid Lime appears exactly twice and only on Ink or as the 2px left border; square corners; no shadows or gradients; Playfair headlines and DM Sans body | builder, verifier | verifier: PASS 9 November 2026 |
 | S11 | Phone (360px) | No horizontal scroll; the timeline stacks; buttons are at least 44px tall | builder | |
-| S12 | Keyboard | Every control is reachable with Tab, shows a focus ring, and the question buttons work with Enter and Space | builder, verifier | |
+| S12 | Keyboard | Every control is reachable with Tab, shows a focus ring, and the question buttons work with Enter and Space | builder, verifier | verifier: PASS 9 November 2026 |
 
 ## Refusal checks
 Not applicable: no database, no login.

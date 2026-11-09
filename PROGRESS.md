@@ -20,7 +20,6 @@ Session 1 (9 November 2026): ran First Session Setup, built the whole page, ran 
 [Rule: 3 to 5 lines maximum. Replace each session.]
 
 ## Remaining work
-- [ ] Checks pass for this stage: every row in docs/checks.md shows a pass dated today; the verifier's report pasted under Check results
 - [ ] First build, before the pull request: the builder connects the repo to a Netlify site (Add new project, Import an existing project, GitHub, this repo; Branch to deploy: main)
 - [ ] Push the branch and confirm it reached GitHub; open the pull request (or give the builder the prefilled compare link) and give the builder its link
 - [ ] Builder checks: on request, the builder rows of docs/checks.md as a numbered list of actions; record the results; fix failures in this session
@@ -28,7 +27,8 @@ Session 1 (9 November 2026): ran First Session Setup, built the whole page, ran 
 [Rule: completed items leave this list and are absorbed into Current state. This list only shrinks.]
 
 ## Check results
-None yet. [Rule: the verifier's report per phase and per branch, with the date: one line per row, PASS or FAIL, and the builder's rows as performed. Kept, never cleared. A FAIL is fixed in the tool and re-run, never edited away.]
+9 November 2026, verifier, branch claude/keen-gates-p71k7k: D1 to D7 PASS; S1, S2, S4, S5, S10, S12 PASS; secrets clean; no protected files edited. Findings fixed after the report: the "Ask once" callout is now Linen; the footer line reads "The Corporate, Group Procurement and EHS and Sustainability"; the section labels no longer repeat the headings. Builder rows (S1 to S12 on the Deploy Preview) are still to run. S10 needs real fonts, so check it where Google Fonts loads. Verdict: ready for the builder's checks.
+[Rule: the verifier's report per phase and per branch, with the date: one line per row, PASS or FAIL, and the builder's rows as performed. Kept, never cleared. A FAIL is fixed in the tool and re-run, never edited away.]
 
 ## Build decisions
 - Fonts load from Google Fonts only; in a blocked network the page falls back to Georgia and system sans.

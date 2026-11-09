@@ -128,7 +128,7 @@ strong { font-weight: 500; }
 .themes-title { margin-bottom: var(--tc-space-md); }
 
 /* Callout (no accent colour) */
-.callout { margin-top: var(--tc-space-xl); background: var(--tc-white); border: 0.5px solid var(--tc-ink); padding: var(--tc-space-lg); max-width: var(--tc-content-width); }
+.callout { margin-top: var(--tc-space-xl); background: var(--tc-linen); border: 0.5px solid var(--tc-ink); padding: var(--tc-space-lg); max-width: var(--tc-content-width); }
 .callout .tc-h3 { margin-bottom: var(--tc-space-sm); }
 
 /* Timeline */
