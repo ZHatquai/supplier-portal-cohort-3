@@ -2,14 +2,14 @@
 
 > Claude Code: read this file at the start of every session, before touching anything. Update it at every save point. Replace content, do not append. History lives in git.
 
-**Session:** 0, build not started
-**Last updated:** 9 November 2026, by Project Governor, pre-build
+**Session:** 1
+**Last updated:** 9 November 2026
 **Live URL:** none yet [Rule: fill in after the first successful deploy]
 **First deploy:** not yet [Rule: the date the first pull request was merged with all builder checks passing; a record only]
 **Stage:** business logic and database [Rule: one of business logic and database / second screen and access design / login and access rules together / deploy and maintain. Decided by what exists, never by a week or version. This tool has no database, so it stays on the first stage.]
 
 ## Plan for this session
-None yet. [Rule: Claude Code opens in plan mode, states the lane (fix / change), proposes the plan, and writes the approved plan here (3 to 8 lines). Replaced each session. A change whose spec version has not moved goes to the Tool Architect, not here.]
+(Approved 9 November 2026.) Lane: first build. 1) First Session Setup (done). 2) Build site/index.html, css/, js/ section by section: hero, 01, 02, 03, 04, footer. 3) Run docs/checks.md data and screen rows (headless Chromium, desktop and 360px), then the verifier. 4) Push, open the pull request, builder connects Netlify, builder checks on the Deploy Preview, builder merges. Risks: lime exactly twice, A Path new tab, workbook byte-identical, no internal-only terms.
 
 ## Current state
 Nothing built. Repo contains CLAUDE.md, PROGRESS.md, product-spec.md, intent.md, checks.md, .claude/settings.json, the-corporate-brand.md (brand skill, installed in session 1) and reference/ (the questionnaire workbook).
@@ -20,7 +20,6 @@ None. The first build session has not happened yet.
 [Rule: 3 to 5 lines maximum. Replace each session.]
 
 ## Remaining work
-- [ ] First Session Setup: create docs/, move the spec, intent.md and checks.md into it and check each is there, install The Corporate brand skill, write netlify.toml (publish = "site"), commit (see CLAUDE.md Session Protocol)
 - [ ] Build Header and hero, with the lime deadline badge and Start button, in site/index.html, css/ and js/, then copy the workbook into site/downloads/ unchanged, then run its rows in docs/checks.md and the verifier
 - [ ] Build 01 Overview: four figures and six themes, then run its rows in docs/checks.md and the verifier
 - [ ] Build 02 Why we are contacting you: three cards and the "Ask once" callout, then run its rows in docs/checks.md and the verifier
