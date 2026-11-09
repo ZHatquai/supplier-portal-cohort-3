@@ -16,7 +16,7 @@ Page built in site/ (index.html, css/styles.css, js/main.js, downloads/ with the
 [Rule: describes what exists and works right now, never what is planned. Completed checklist items are absorbed here in compressed form.]
 
 ## Last session
-Session 1 (9 November 2026): ran First Session Setup, built the whole page, ran data checks and a browser pass of the screen checks. Open: verifier run, then pull request.
+Session 1 (9 November 2026): ran First Session Setup, built the whole page, ran data checks and a browser pass of the screen checks. Verifier passed; findings fixed. Pull request #2 is open (https://github.com/ZHatquai/supplier-portal-cohort-3/pull/2). Netlify connected by the builder. Open: the builder's checks on the Deploy Preview, then the builder's merge.
 [Rule: 3 to 5 lines maximum. Replace each session.]
 
 ## Remaining work
