@@ -2,15 +2,20 @@
 
 > Claude Code: read this file at the start of every session, before touching anything. Update it at every save point. Replace content, do not append. History lives in git.
 
-**Session:** 2
+**Session:** 3
 **Last updated:** 16 November 2026
 **Live URL:** https://supplier-portal-cohort-3.netlify.app/ [Rule: fill in after the first successful deploy]
 **First deploy:** 9 November 2026 [Rule: the date the first pull request was merged with all builder checks passing; a record only]
 **Stage:** business logic and database [Rule: one of business logic and database / second screen and access design / login and access rules together / deploy and maintain. Decided by what exists, never by a week or version.]
-**Supabase project:** not yet created. Confirm the name "the-corporate-sustainability" (EU, Frankfurt) with the builder and create it in the build session. [Rule: the only place project existence is recorded]
+**Supabase project:** created by the builder on 16 November 2026: "the-corporate-sustainability", ref huahhrvlvkqktvvimylo, URL https://huahhrvlvkqktvvimylo.supabase.co, eu-central-1 (Frankfurt), Free plan [Rule: the only place project existence is recorded]
 
 ## Plan for this session
-None yet. [Rule: Claude Code opens in plan mode, states the lane, proposes the plan and writes the approved plan here (3 to 8 lines). Replaced each session.]
+Session 3 (16 November 2026), lane: change, specced as v2.0 in session 2. Approved plan:
+1. Record the builder-created Supabase project; build the schema as one named migration (two tables, RLS on, no policies, anon and authenticated grants revoked, a partial unique index for one received row per key, `create_submission` function for service_role only, private bucket), then docs/supabase-setup.md. Builder connects the Supabase extension after this.
+2. netlify.toml functions directory and package.json; one question list in site/js/questions.js.
+3. `parse-workbook` and fixtures (D8 to D10); `submit` (D11 to D15).
+4. Page: 03 text, 04 A Path entry, B Path form and upload, review, confirmation, errors, footer, about.html.
+5. Checks, refusal test half A, verifier, pull request, builder checks, reviewer, builder merge. [Rule: Claude Code opens in plan mode, states the lane, proposes the plan and writes the approved plan here (3 to 8 lines). Replaced each session.]
 
 ## Current state
 The page is live at https://supplier-portal-cohort-3.netlify.app/ as v1.0, deployed from main after pull request 2 was merged on 9 November 2026. Site in site/ (index.html, css/styles.css, js/main.js, downloads/ with the workbook, byte-identical to reference/). All six blocks present: hero, 01 to 04, footer. Data checks D1 to D7 of v1.0 pass; the builder reports all builder checks done on the Deploy Preview. v2.0 (submission through the tool) is specced but not built: spec, access matrix and user stories are written and this file, CLAUDE.md and docs/checks.md govern it. Claude Code could not load the live site from the cloud session (network policy), so the live load check is the builder's.
@@ -23,7 +28,6 @@ Session 2 (16 November 2026): record-keeping, then the change to v2.0 specced in
 ## Remaining work
 - [ ] Before launch (see Known issues): sign-off owner, A Path link, workbook final for the 2027 cycle
 - [ ] (v2.0 revision) Update netlify.toml: add the functions directory, keep `publish = "site"` and the download header; add package.json for the function dependencies
-- [ ] (v2.0 revision) Create Supabase project "the-corporate-sustainability" via MCP (EU region); confirm the name with the builder first; record the ref in the header above
 - [ ] (v2.0 revision) Build submissions, submission_answers and the private bucket submission-files (named migrations saved in supabase/migrations/, RLS on from creation, login-ready columns, anon grants revoked, rules from docs/access-matrix.md), no Auth; then write docs/supabase-setup.md following the structure in CLAUDE.md
 - [ ] (v2.0 revision) Build the `parse-workbook` function and the fixtures in fixtures/ (reads the upload, saves nothing) then run D8 to D10 and the verifier
 - [ ] (v2.0 revision) Build the `submit` function: public endpoint protections before the first public deploy (field limits, validation, .xlsx and size limits, supersede step) then run D11 to D15 and the verifier
