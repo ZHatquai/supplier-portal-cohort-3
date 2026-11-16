@@ -1,0 +1,154 @@
+{
+ "answers": [
+  {
+   "question_id": "S1-1",
+   "response": "Fixture Components GmbH, Germany",
+   "evidence_note": ""
+  },
+  {
+   "question_id": "S1-2",
+   "response": "Alex Example, Sustainability Lead, alex@fixture.example",
+   "evidence_note": ""
+  },
+  {
+   "question_id": "S1-3",
+   "response": "No — Will Complete Questionnaire",
+   "evidence_note": ""
+  },
+  {
+   "question_id": "S1-4",
+   "response": "Fixture response S1-4",
+   "evidence_note": "Fixture note S1-4"
+  },
+  {
+   "question_id": "S2-1",
+   "response": "Fixture response S2-1",
+   "evidence_note": "Fixture note S2-1"
+  },
+  {
+   "question_id": "S2-2",
+   "response": "Fixture response S2-2",
+   "evidence_note": "Fixture note S2-2"
+  },
+  {
+   "question_id": "S2-3",
+   "response": "Fixture response S2-3",
+   "evidence_note": "Fixture note S2-3"
+  },
+  {
+   "question_id": "S2-4",
+   "response": "Yes",
+   "evidence_note": "Fixture note S2-4"
+  },
+  {
+   "question_id": "S2-5",
+   "response": "Fixture response S2-5",
+   "evidence_note": "Fixture note S2-5"
+  },
+  {
+   "question_id": "S2-6",
+   "response": "Fixture response S2-6",
+   "evidence_note": "Fixture note S2-6"
+  },
+  {
+   "question_id": "S3-1",
+   "response": "Fixture response S3-1",
+   "evidence_note": "Fixture note S3-1"
+  },
+  {
+   "question_id": "S3-2",
+   "response": "Yes",
+   "evidence_note": "Fixture note S3-2"
+  },
+  {
+   "question_id": "S3-3",
+   "response": "Fixture response S3-3",
+   "evidence_note": "Fixture note S3-3"
+  },
+  {
+   "question_id": "S3-4",
+   "response": "Fixture response S3-4",
+   "evidence_note": "Fixture note S3-4"
+  },
+  {
+   "question_id": "S4-1",
+   "response": "Fixture response S4-1",
+   "evidence_note": "Fixture note S4-1"
+  },
+  {
+   "question_id": "S4-2",
+   "response": "Yes",
+   "evidence_note": "Fixture note S4-2"
+  },
+  {
+   "question_id": "S4-3",
+   "response": "Fixture response S4-3",
+   "evidence_note": "Fixture note S4-3"
+  },
+  {
+   "question_id": "S4-4",
+   "response": "Fixture response S4-4",
+   "evidence_note": "Fixture note S4-4"
+  },
+  {
+   "question_id": "S5-1",
+   "response": "Fixture response S5-1",
+   "evidence_note": "Fixture note S5-1"
+  },
+  {
+   "question_id": "S5-2",
+   "response": "Fixture response S5-2",
+   "evidence_note": "Fixture note S5-2"
+  },
+  {
+   "question_id": "S5-3",
+   "response": "Fixture response S5-3",
+   "evidence_note": "Fixture note S5-3"
+  },
+  {
+   "question_id": "S5-4",
+   "response": "Fixture response S5-4",
+   "evidence_note": "Fixture note S5-4"
+  },
+  {
+   "question_id": "S6-1",
+   "response": "Yes",
+   "evidence_note": "Fixture note S6-1"
+  },
+  {
+   "question_id": "S6-2",
+   "response": "Fixture response S6-2",
+   "evidence_note": "Fixture note S6-2"
+  },
+  {
+   "question_id": "S6-3",
+   "response": "Fixture response S6-3",
+   "evidence_note": "Fixture note S6-3"
+  },
+  {
+   "question_id": "S7-1",
+   "response": "Yes",
+   "evidence_note": "Fixture note S7-1"
+  },
+  {
+   "question_id": "S7-2",
+   "response": "Yes",
+   "evidence_note": "Fixture note S7-2"
+  },
+  {
+   "question_id": "S7-3",
+   "response": "Fixture response S7-3",
+   "evidence_note": "Fixture note S7-3"
+  },
+  {
+   "question_id": "S7-4",
+   "response": "Yes",
+   "evidence_note": "Fixture note S7-4"
+  },
+  {
+   "question_id": "S7-5",
+   "response": "Fixture response S7-5",
+   "evidence_note": "Fixture note S7-5"
+  }
+ ]
+}
