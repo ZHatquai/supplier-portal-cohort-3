@@ -18,7 +18,7 @@ Session 3 (16 November 2026), lane: change, specced as v2.0 in session 2. Approv
 5. Checks, refusal test half A, verifier, pull request, builder checks, reviewer, builder merge. [Rule: Claude Code opens in plan mode, states the lane, proposes the plan and writes the approved plan here (3 to 8 lines). Replaced each session.]
 
 ## Current state
-The page is live at https://supplier-portal-cohort-3.netlify.app/ as v1.0, deployed from main after pull request 2 was merged on 9 November 2026. Site in site/ (index.html, css/styles.css, js/main.js, downloads/ with the workbook, byte-identical to reference/). All six blocks present: hero, 01 to 04, footer. Data checks D1 to D7 of v1.0 pass; the builder reports all builder checks done on the Deploy Preview. v2.0 (submission through the tool) is specced but not built: spec, access matrix and user stories are written and this file, CLAUDE.md and docs/checks.md govern it. Claude Code could not load the live site from the cloud session (network policy), so the live load check is the builder's.
+The page is live at https://supplier-portal-cohort-3.netlify.app/ as v1.0, deployed from main after pull request 2 was merged on 9 November 2026. Site in site/ (index.html, css/styles.css, js/main.js, downloads/ with the workbook, byte-identical to reference/). All six blocks present: hero, 01 to 04, footer. Data checks D1 to D7 of v1.0 pass; the builder reports all builder checks done on the Deploy Preview. v2.0 (submission through the tool) is in progress on branch claude/affectionate-ptolemy-udznhn. Database built (session 3): tables submissions and submission_answers with RLS on and no policies, anon/authenticated grants revoked, create_submission for service_role only, private bucket submission-files; recorded in docs/supabase-setup.md; two migration files in supabase/migrations/. Spec, spec, access matrix and user stories are written and this file, CLAUDE.md and docs/checks.md govern it. Claude Code could not load the live site from the cloud session (network policy), so the live load check is the builder's.
 [Rule: describes what exists and works right now, never what is planned. Completed checklist items are absorbed here in compressed form.]
 
 ## Last session
@@ -28,7 +28,6 @@ Session 2 (16 November 2026): record-keeping, then the change to v2.0 specced in
 ## Remaining work
 - [ ] Before launch (see Known issues): sign-off owner, A Path link, workbook final for the 2027 cycle
 - [ ] (v2.0 revision) Update netlify.toml: add the functions directory, keep `publish = "site"` and the download header; add package.json for the function dependencies
-- [ ] (v2.0 revision) Build submissions, submission_answers and the private bucket submission-files (named migrations saved in supabase/migrations/, RLS on from creation, login-ready columns, anon grants revoked, rules from docs/access-matrix.md), no Auth; then write docs/supabase-setup.md following the structure in CLAUDE.md
 - [ ] (v2.0 revision) Build the `parse-workbook` function and the fixtures in fixtures/ (reads the upload, saves nothing) then run D8 to D10 and the verifier
 - [ ] (v2.0 revision) Build the `submit` function: public endpoint protections before the first public deploy (field limits, validation, .xlsx and size limits, supersede step) then run D11 to D15 and the verifier
 - [ ] (v2.0 revision) Update 03 How this works (Route B text) then run its rows in docs/checks.md and the verifier
@@ -55,7 +54,7 @@ Reported by the builder on 16 November 2026: all builder checks (S1 to S12 on th
 [Rule: the verifier's report per phase and per branch, with the date: one line per row, PASS or FAIL, and the builder's rows as performed. Kept, never cleared. A FAIL is fixed in the tool and re-run, never edited away.]
 
 ## Refusal test record
-None yet. [Rule: filled by Claude Code at half A and by the builder at half B: date, who, cell tried, result. Kept, never cleared. Any change to a rule re-runs both halves before the push.]
+16 November 2026, Claude Code, half A (database level, as the `anon` role the public API uses, all rolled back): read submissions REFUSED; read submission_answers REFUSED; insert into both REFUSED; update REFUSED; delete REFUSED; call create_submission REFUSED; call rls_auto_enable REFUSED; insert into storage.objects REFUSED (RLS); anon sees 0 objects and 0 buckets. The API-side attempt from this container was blocked by the network policy (supabase.co not reachable); repeat from the Deploy Preview side. [Rule: filled by Claude Code at half A and by the builder at half B: date, who, cell tried, result. Kept, never cleared. Any change to a rule re-runs both halves before the push.]
 
 ## Build decisions
 - Fonts load from Google Fonts only; in a blocked network the page falls back to Georgia and system sans.
@@ -63,6 +62,9 @@ None yet. [Rule: filled by Claude Code at half A and by the builder at half B: d
 - Footer is Ink with Chalk text (no accent). The choice buttons show the chosen one as Ink fill.
 - Governor decision: the deployed folder is site/, not the repo root, so docs/, reference/, fixtures/ and .claude/ are never served on the public URL.
 - v2.0: the Backlog items for upload, storing submissions and completing the questionnaire in the page were promoted into Remaining work. Counting submissions and tracking who has responded stay on the Backlog as the dashboard.
+- v2.0: supersede and insert run in one database transaction through public.create_submission (service_role only), called by the submit function; a unique index guarantees one received row per company key.
+- v2.0: the platform's rls_auto_enable() event-trigger function (created with the project) is kept; its API execute was revoked.
+- v2.0: refusal tests run as the anon role inside the database, so no key appears in any command.
 - v2.0: Return by email was removed (submission is through the tool), which closes the open question on its subject line.
 [Rule: one line per decision made during the build that is not in the spec. Future sessions depend on these to stay consistent.]
 
