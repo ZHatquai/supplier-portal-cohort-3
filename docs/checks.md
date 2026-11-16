@@ -1,21 +1,34 @@
 # Checks: Supplier Sustainability Portal
 
-Written against product-spec.md v1.0 · 9 November 2026 · by Project Governor
+Written against product-spec.md v2.0 · 16 November 2026 · by Project Governor
 
 > What "done" means for this tool. Claude Code runs the rows it can perform at the end of every phase and writes the result and date in the last column; the verifier agent re-runs them in a fresh context; the builder performs the rows marked "builder" on the Deploy Preview before merging. A row that fails is fixed in the tool, never in this file. This file changes only when the spec changes (through the Project Governor); Claude Code never edits a row.
+>
+> Rows D2, D3, D4, D7, S4, S6 to S12 changed meaning in v2.0 and their results are empty; D1, D5, D6, S1, S2 and S5 are unchanged and keep their v1.0 results.
 
 ## Data checks
-Known input in, known result out. This tool has no database, so these run against the built site and the repo.
+Known input in, known result out. Fixtures live in `fixtures/` at the repo root (never served, never in `site/`): `workbook_filled.xlsx` (a copy of the reference workbook that Claude Code fills with made-up values, 30 known answers; the reference file is never edited), `workbook_wrong_layout.xlsx` (rows moved), `not_a_workbook.pdf`, `workbook_oversize.xlsx` (over 4 MB). Rows that save data run against the Deploy Preview's database (there is no preview database) and clean up their own test rows afterwards.
 
 | # | Given (fixture or action) | Expected result | Performed by | Last result |
 |---|---------------------------|-----------------|--------------|-------------|
 | D1 | The built site's `/downloads/` file compared with `reference/The_Corporate_Supplier_Questionnaire_2026_39.xlsx` | Identical bytes (checksum match). The file opens and its sheet "Supplier Assessment 2026" has 7 sections, S1 to S7. | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
-| D2 | The "Return by email" link in the built HTML | `href` starts with `mailto:inbox@thecorporate.com`, contains a subject, and has no other recipient | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
-| D3 | The "Go to EcoVadis" link in the built HTML | `href` is `https://ecovadis.com`, `target="_blank"`, `rel` contains `noopener` | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
-| D4 | Search the built output and the repo for `ecovadis`, `inbox@`, `api_key`, `secret`, `token`, `eyJ`, and for the strings `690,000`, `RACI`, `15 business days`, `escalat` | The two intended links appear. No credential string appears. None of the four internal-only terms appears in any page text. | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D2 | Search the built HTML for `mailto:` and for "Return by email" | No "Return by email" button or link and no `mailto:` link with the subject "Supplier Sustainability Assessment". The address inbox@thecorporate.com appears only as text (footer, notice, About page). | Claude Code, verifier | |
+| D3 | The "Go to EcoVadis" link in the built HTML | `href` is `https://ecovadis.com`, `target="_blank"`, `rel` contains `noopener`; it is the only link to EcoVadis | Claude Code, verifier | |
+| D4 | Search the built output and the repo for `ecovadis`, `api_key`, `secret`, `token`, `eyJ`, `sb_secret`, `service_role`, and for the strings `690,000`, `RACI`, `15 business days`, `escalat` | The EcoVadis link appears. No credential string or key value appears anywhere in the repo or in `site/`. The words `SUPABASE_SERVICE_ROLE_KEY` appear only as a variable name inside `netlify/functions/` and in docs. None of the four internal-only terms appears in any page text. | Claude Code, verifier | |
 | D5 | Timeline text | Shows April 2027, 30 September 2027, Q4 2027 and Q1 2028, and no 2026 date | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
 | D6 | The four figures | 71%, 500+, 2045 and 50% appear, and no other tCO2e figure appears | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
-| D7 | `netlify.toml` and the deployed folder | `publish = "site"` with no build command; the site folder holds only index.html, css, js, assets and downloads, so nothing under docs/, reference/ or .claude/ is served | Claude Code, verifier | PASS 9 November 2026 (Claude Code) |
+| D7 | `netlify.toml` and the deployed folder | `publish = "site"`, the functions directory set, no build command for the page; the site folder holds only index.html, about.html, css, js, assets and downloads, so nothing under docs/, reference/, fixtures/, .claude/ or netlify/ is served as a file | Claude Code, verifier | |
+| D8 | `parse-workbook` called with `fixtures/workbook_filled.xlsx` | Returns exactly the 30 known responses and evidence notes, each under its question id; the declaration is not returned. The unfilled reference workbook returns 30 empty answers and no error. | Claude Code, verifier | |
+| D9 | `parse-workbook` called with `workbook_wrong_layout.xlsx`, `not_a_workbook.pdf`, `workbook_oversize.xlsx`, and an empty body | Each returns the "We could not read this file" error (or the size message). No rows are created and no file is stored. | Claude Code, verifier | |
+| D10 | `parse-workbook` called with `workbook_filled.xlsx`; count the rows of both tables and the files in the bucket before and after | The counts are identical: reading saves nothing | Claude Code, verifier | |
+| D11 | `submit` called with a valid form payload (route `form`, 30 answers, declaration) | One `submissions` row (status `received`, route `form`, no file), 30 `submission_answers` rows, and a confirmation with the date and a reference | Claude Code, verifier | |
+| D12 | `submit` called with a valid upload payload including `workbook_filled.xlsx` | One `submissions` row (route `upload`, reading_status `read`, `file_path` set), 30 answer rows, and the file present in the private bucket, byte-identical to the fixture | Claude Code, verifier | |
+| D13 | `submit` called with a missing company name, then an invalid email, then a missing declaration tick, then an unknown question id, then a 4,001-character answer, then a body over the size limit | Each is refused with a clear message; no rows are created and no file is stored | Claude Code, verifier | |
+| D14 | `submit` called twice with the same company name and contact email (different answers) | Exactly one row is `received` (the newer) and the older is `superseded`; both are kept | Claude Code, verifier | |
+| D15 | `submit` called with a valid A Path entry (route `ecovadis`) and then without a contact email | The first creates one `submissions` row with no answer rows and no file; the second is refused | Claude Code, verifier | |
+| D16 | With the publishable (anon) key and with no key, try to read, insert, update and delete rows in `submissions` and `submission_answers`, and to list or fetch files in `submission-files` | Every attempt is refused. RLS is enabled on both tables from creation, with no anon policy and no anon grant; the bucket is private. The Supabase security advisor reports no open table. | Claude Code, verifier | |
+| D17 | Load the page and make every kind of submission in a browser session; list the network requests | Requests go only to the page's own address (the two functions, the workbook), the Google Fonts stylesheet and font files, and the EcoVadis link when followed. No request goes to a Supabase address. No cookie is set. | Claude Code, verifier | |
+| D18 | The built page's text | The v1.0 line "This page does not collect or store any information about you" does not appear anywhere. The footer line and the data notice from the spec's Sections 7 and 8 do. | Claude Code, verifier | |
 
 ## Screen checks
 What must be visible and what must happen. The builder does these on the Deploy Preview; the verifier does the ones it can see.
@@ -25,18 +38,26 @@ What must be visible and what must happen. The builder does these on the Deploy 
 | S1 | Hero | Logo, title, "Submissions close 30 September 2027" lime badge on black, and a Start button that scrolls to section 04 | builder, verifier | verifier: PASS 9 November 2026 |
 | S2 | 01 Overview | Four figures and six themes with ESRS references; figures stack to one column on a phone | builder, verifier | verifier: PASS 9 November 2026 |
 | S3 | 02 Why | Three cards and the "Ask once" callout | builder | |
-| S4 | 03 How it works | Two route cards and the four-phase timeline with the right dates | builder, verifier | verifier: PASS 9 November 2026 |
+| S4 | 03 How it works | Two route cards (Route B says it is submitted on this page, by form or upload) and the four-phase timeline with the right dates | builder, verifier | |
 | S5 | 04 before any choice | The question and both buttons are visible, and neither path is visible | builder, verifier | verifier: PASS 9 November 2026 |
-| S6 | 04, press Yes | A Path opens, B Path stays hidden, "Go to EcoVadis" opens EcoVadis in a new tab | builder | |
-| S7 | 04, press No | B Path opens, A Path hidden, the file downloads and opens in Excel, the email button opens a draft to inbox@thecorporate.com with the subject filled | builder | |
-| S8 | 04, switch routes | Pressing Yes then No (and back) shows only the latest path each time; a reload returns to the neutral state | builder | |
-| S9 | Footer | Contact address and the line "This page does not collect or store any information about you." | builder | |
-| S10 | Brand | Acid Lime appears exactly twice and only on Ink or as the 2px left border; square corners; no shadows or gradients; Playfair headlines and DM Sans body | builder, verifier | verifier: PASS 9 November 2026 |
-| S11 | Phone (360px) | No horizontal scroll; the timeline stacks; buttons are at least 44px tall | builder | |
-| S12 | Keyboard | Every control is reachable with Tab, shows a focus ring, and the question buttons work with Enter and Space | builder, verifier | verifier: PASS 9 November 2026 |
+| S6 | 04, press Yes | A Path opens, B Path stays hidden; the short entry form shows with the data notice; an empty required field blocks it; after saving, the confirmation shows the date and "Go to EcoVadis" appears and opens EcoVadis in a new tab | builder | |
+| S7 | 04, press No | B Path opens, A Path hidden; the workbook downloads and opens in Excel; the two buttons "Fill in the form" and "Upload the filled workbook" show, neither preselected; there is no Return by email | builder | |
+| S8 | 04, switch routes | Pressing Yes then No (and back) shows only the latest path each time, and switching between the form and the upload shows only the latest panel; a reload returns to the neutral state and clears anything typed | builder | |
+| S9 | Footer | Contact address, the data line "Data you submit on this page is stored by The Corporate. This page uses no cookies and no tracking.", and a link to About this tool | builder | |
+| S10 | Brand | Acid Lime appears exactly twice and only on Ink or as the 2px left border; square corners; no shadows or gradients; Playfair headlines and DM Sans body; the new screens follow the brand | builder, verifier | |
+| S11 | Phone (360px) | No horizontal scroll on any screen including the form, review and confirmation; the timeline stacks; buttons are at least 44px tall | builder | |
+| S12 | Keyboard | Every control, including form fields, dropdowns, the file chooser, the tick box and every button, is reachable with Tab, shows a focus ring, and works with Enter and Space | builder, verifier | |
+| S13 | Form | All 30 questions appear in S1 to S7 order with ESRS references, the workbook's own dropdown options, required marks on company, country, contact name and email, and S1-3 prefilled and fixed; submitting with a required field empty shows an inline message and moves focus to it; "Review your answers" opens the review screen without saving | builder, verifier | |
+| S14 | Upload and review | Choosing the filled workbook shows the review screen with the answers filled in, editable, and company name and contact email as separate fields to confirm; choosing a wrong file shows the error message and nothing else happens; the declaration must be completed on screen; "Confirm and submit" stays disabled until the required fields and the tick are complete | builder, verifier | |
+| S15 | Confirmation and failure | After confirming, "Submission received" shows the date, the company name and a reference; with the save function turned off, the error "We could not save your submission. Nothing was recorded. Please try again." shows with Try again, the answers are still on screen, and on the A Path the EcoVadis link is still offered | builder, verifier | |
+| S16 | About this tool | Reached from the footer; shows who runs it and the contact, what is stored and about whom, where it is processed, how long it is kept, how to ask for deletion, no login, no cookies, and the version | builder | |
 
 ## Refusal checks
-Not applicable: no database, no login.
+Every `no` cell in docs/access-matrix.md (short form, pattern P1) is one check; the file references the matrix, it does not copy the grid.
+
+| # | Reference | Performed by | Last result |
+|---|-----------|--------------|-------------|
+| R1 | Every `no` cell in docs/access-matrix.md Section 1 and Section 6: the browser, with no key or the publishable key, can read, create, change or delete nothing in either table or the bucket (half A, through the API; D16 is its data form); and from the supplier's side, after confirming a submission a supplier cannot see, fetch or list their own submission or file (half B, from the Deploy Preview) | Claude Code (half A), builder (half B) | |
 
 ## How a result is written
 `PASS 2026-11-16 (Claude Code)` · `PASS 2026-11-16 (verifier)` · `PASS 2026-11-17 (builder, branch address)` · `FAIL 2026-11-16 (verifier): [one line why]`. A FAIL stays until the row passes again; the earlier FAIL is kept in PROGRESS.md Check results, not here.
