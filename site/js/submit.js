@@ -20,6 +20,11 @@
 
   var state = { route: null, file: null, uploadAnswers: null };
 
+  // A reload always returns to the neutral state: some browsers restore typed values, so clear them.
+  function resetForms() { Array.prototype.forEach.call(document.querySelectorAll('form'), function (f) { f.reset(); }); }
+  resetForms();
+  window.addEventListener('pageshow', function (e) { if (e.persisted) window.location.reload(); });
+
   function $(id) { return document.getElementById(id); }
 
   function el(tag, attrs, children) {
@@ -144,7 +149,7 @@
   function fixedField(q, value) {
     return el('div', { className: 'question' }, [
       el('div', { className: 'field' }, [
-        el('p', { className: 'fixed-label' }, [el('span', { className: 'q-id', text: q.id }), el('span', { className: 'q-text', text: firstSentence(q.text) })]),
+        el('p', { className: 'fixed-label' }, [el('span', { className: 'q-id', text: q.id + (q.esrs ? ' · ' + q.esrs : '') }), el('span', { className: 'q-text', text: firstSentence(q.text) })]),
         el('p', { className: 'fixed-value', text: value || 'No answer' })
       ])
     ]);

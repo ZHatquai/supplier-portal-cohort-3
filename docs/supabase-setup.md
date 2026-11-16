@@ -64,7 +64,7 @@ RLS is enabled on both tables. No policy exists for any role.
 
 | Table | Rule in words | Mechanism | Matrix line | Status |
 |---|---|---|---|---|
-| submissions, submission_answers | anon creates only through the `submit` function; no policy, no grant | the submit function (secret key) calling create_submission | #1 | built (function pending) |
+| submissions, submission_answers | anon creates only through the `submit` function; no policy, no grant | the submit function (secret key) calling create_submission | #1 | built; end to end pending the Netlify keys |
 | submissions, submission_answers | anon reads nothing | none: no grant, no policy | #2 | built, tested |
 | submissions | supersede: the earlier received row for the same company_key becomes superseded in the same transaction as the insert; one received row per key | create_submission + unique partial index | #3 | built |
 | submissions, submission_answers | update and delete for everyone | none: default deny | #4 | built, tested |
@@ -115,6 +115,7 @@ To be verified once the builder connects the extension; corrected here if the na
 - Deleting a submission on a GDPR request: delete its submission_answers rows first (no cascade), then the submissions row, then its file in submission-files; repeat for every row with the same company_key, superseded ones included.
 - The Supabase security advisor reports "RLS enabled, no policy" (INFO) on both tables. That is intended: no role may read or write except the secret-key functions.
 - The project was created by the builder with the platform's "auto-enable RLS" event trigger; it is kept.
+- Rebuilding on a fresh project: the second migration revokes execute on public.rls_auto_enable(), a function the platform created with this project. On a project without it, skip that file (or create the project with the auto-enable RLS option).
 - This container cannot reach supabase.co (network policy); the API-side refusal check runs from the Deploy Preview.
 
 ## 10. Change log

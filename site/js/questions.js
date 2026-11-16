@@ -346,10 +346,7 @@
         "required": false
       }
     ],
-    "declaration": "DECLARATION: I confirm that the information provided in this assessment is accurate and complete to the best of my knowledge.",
-    "templateNotes": {
-      "S3-2": "⚠ AUTO-FLAG: \"Yes\" triggers PFAS Risk review"
-    }
+    "declaration": "DECLARATION: I confirm that the information provided in this assessment is accurate and complete to the best of my knowledge."
   };
   if (typeof module !== 'undefined' && module.exports) { module.exports = data; } else { root.TC_QUESTIONS = data; }
 })(typeof window !== 'undefined' ? window : this);

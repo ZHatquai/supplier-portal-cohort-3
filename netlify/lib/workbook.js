@@ -5,6 +5,9 @@
 const ExcelJS = require('exceljs');
 const Q = require('../../site/js/questions.js');
 
+// Template text the blank workbook carries in a notes cell; read as empty (kept server side, never served).
+const TEMPLATE_NOTES = { 'S3-2': '⚠ AUTO-FLAG: "Yes" triggers PFAS Risk review' };
+
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
 const READ_ERROR = 'We could not read this file. Please use the questionnaire downloaded from this page, or fill in the form instead.';
 const SIZE_ERROR = 'This file is larger than 4 MB. Please use the questionnaire downloaded from this page, or fill in the form instead.';
@@ -57,7 +60,7 @@ async function readWorkbook(buffer, fileName) {
 
   const answers = Q.questions.map((q) => {
     let note = cellText(ws.getCell(q.row, 6));
-    const template = Q.templateNotes && Q.templateNotes[q.id];
+    const template = TEMPLATE_NOTES[q.id];
     if (template && norm(note) === norm(template)) note = '';
     return { question_id: q.id, response: cellText(ws.getCell(q.row, 5)), evidence_note: note };
   });

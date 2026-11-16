@@ -23,7 +23,7 @@ for r in range(5, 42):
     questions.append(q)
 assert len(questions) == 30, len(questions)
 data = {'sheet': 'Supplier Assessment 2026', 'sections': sections, 'questions': questions,
-        'declaration': ws['A43'].value, 'templateNotes': {'S3-2': ws['F19'].value}}
+        'declaration': ws['A43'].value}
 js = ("/* Question list for the Supplier Sustainability Portal.\n"
       " * Generated from reference/The_Corporate_Supplier_Questionnaire_2026_39.xlsx (sheet, row, column D text,\n"
       " * type, ESRS reference and the workbook's own dropdown options). Do not reword; regenerate if the workbook changes.\n"
