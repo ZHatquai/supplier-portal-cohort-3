@@ -31,7 +31,6 @@ Session 3 (16 November 2026): v2.0 built on branch claude/affectionate-ptolemy-u
 ## Remaining work
 - [ ] Before launch (see Known issues): sign-off owner, A Path link, workbook final for the 2027 cycle
 - [ ] (v2.1 revision) Builder: on the Supabase Storage page, delete the 3 test files in submission-files, then delete the bucket
-- [ ] (v2.1 revision) Checks for v2.1 pass (every row of docs/checks.md dated); verifier report under Check results; builder rows on the Deploy Preview; reviewer passes
 - [ ] (v2.1 revision) Builder checks on the Deploy Preview of pull request 4 (list given on 20 November 2026): record the results; fix failures in this session; the API-side half of R1 and D16 from the preview side
 - [ ] (v2.0 revision) Builder: merge the pull request and delete the branch, then main deploys. Claude Code never merges. Check the live site loads.
 - [ ] (v2.0 revision) Builder: upgrade the Supabase project to Pro in the dashboard before the first supplier wave; Free has no backups and pauses when idle
@@ -109,5 +108,10 @@ Reported by the builder on 16 November 2026: all builder checks (S1 to S12 on th
 [Rule: deferred and approved items live here, nowhere else. When the spec is revised, review this list: an item now in scope is promoted into Remaining work and removed from here, with a Build decisions line saying so. Nothing here is built without being promoted.]
 
 ## Notes for next session
-None.
+Written 20 November 2026 at the builder's request, end of session 4. Where we stopped: v2.1 is built, pushed and passed by the verifier and the reviewer (no blockers) on branch claude/affectionate-ptolemy-udznhn, pull request 4, NOT merged. The live site still runs v1.0. Resume in this order:
+1. Builder: Supabase, Storage, delete the 3 test files in submission-files, then delete the bucket. Claude Code then re-checks: 0 buckets, 0 objects (D21).
+2. Builder: run the 31-step check list on the Deploy Preview (https://deploy-preview-4--supplier-portal-cohort-3.netlify.app); say *checks* to get the list again. A first A Path row ("Zyad test", 20 November 2026, 17:14 UTC) was saved and kept: the builder half of D15 holds so far.
+3. Claude Code: record the results in docs/checks.md and Check results; fix any failure on this same branch; re-run the verifier if code changed.
+4. Builder: when every row passes, merge pull request 4 on GitHub and delete the branch; main deploys v2.1. Claude Code checks the live site loads.
+5. Builder: clean the test rows out of both tables (answers first) after the checks.
 [Rule: the builder writes here between sessions. Claude Code reads these aloud at session start, acts on them, then clears this section.]
