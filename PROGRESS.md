@@ -55,5 +55,5 @@ Reported by the builder on 16 November 2026: all builder checks (S1 to S12 on th
 [Rule: deferred and approved items live here, nowhere else. When the spec is revised, review this list: an item now in scope is promoted into Remaining work and removed from here, with a Build decisions line saying so. Nothing here is built without being promoted.]
 
 ## Notes for next session
-None.
+- 20 November 2026: work is still ongoing on branch `claude/affectionate-ptolemy-udznhn` (pull request #4, not merged). It holds v2.0 (submission through the portal, Supabase) and the planned v2.1 changes from the builder's Deploy Preview test: a clearer A Path confirmation, number-only fields for Scope 1, 2, 3 and water withdrawal, and no stored Excel file. The live site on main is still v1.0. Continue that work on that branch, not from main. Once it is complete and pull request #4 is merged, delete the branch and delete this note.
 [Rule: the builder writes here between sessions. Claude Code reads these aloud at session start, acts on them, then clears this section.]
