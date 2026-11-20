@@ -124,4 +124,4 @@ To be verified once the builder connects the extension; corrected here if the na
 |---|---|---|---|
 | 3 | 16 November 2026 | supabase/migrations/20261116155335_initial_schema.sql | tables submissions and submission_answers; RLS on, no policies; anon, authenticated and public grants revoked; one-received-per-key index; create_submission for service_role only; updated_at triggers; private bucket submission-files (4 MB, .xlsx) |
 | 3 | 16 November 2026 | supabase/migrations/20261116155424_revoke_rls_auto_enable_execute.sql | execute on the platform's rls_auto_enable() revoked from public, anon, authenticated |
-| 4 | 20 November 2026 | supabase/migrations/20261120163509_v2_1_no_file_storage.sql | check upload_has_file replaced by file_path_unused (file_path always null); create_submission no longer writes file_path; nothing dropped or renamed |
+| 4 | 20 November 2026 | supabase/migrations/20261120163509_v2_1_no_file_storage.sql | check upload_has_file replaced by file_path_unused (file_path always null); create_submission no longer writes file_path; no table or column dropped or renamed (one check replaced) |
