@@ -152,6 +152,18 @@ strong { font-weight: 500; }
 .path-title { margin-bottom: var(--tc-space-lg); }
 .path-title:focus { outline: none; }
 .path-title:focus-visible { outline: 2px solid var(--tc-ink); outline-offset: 4px; }
+.path-lead { max-width: var(--tc-content-width); margin-bottom: var(--tc-space-sm); }
+/* A Path confirmation (v2.1): one next step */
+.done-title { margin-bottom: var(--tc-space-sm); }
+.done-title:focus { outline: none; }
+.done-title:focus-visible { outline: 2px solid var(--tc-ink); outline-offset: 4px; }
+.confirm-box .done-line { font-size: 17px; font-weight: 400; }
+.confirm-box .actions { margin-top: var(--tc-space-lg); }
+.confirm-box .done-small { margin-top: var(--tc-space-md); font-size: 13px; color: #6f6a5b; }
+/* number fields (v2.1): unit beside the field */
+.unit-wrap { display: flex; align-items: stretch; max-width: 360px; }
+.unit-wrap .tc-input { flex: 1 1 auto; min-width: 0; }
+.unit { display: flex; align-items: center; padding: 0 12px; border: 0.5px solid var(--tc-stone); border-left: none; background: var(--tc-chalk); font-size: 13px; font-weight: 400; white-space: nowrap; }
 .steps { counter-reset: step; max-width: var(--tc-content-width); }
 .steps li { counter-increment: step; position: relative; padding-left: 48px; margin-bottom: var(--tc-space-md); }
 .steps li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: 1px; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #6f6a5b; line-height: 2.2; }

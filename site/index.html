@@ -182,11 +182,7 @@
       <!-- A Path -->
       <div class="path tc-card-elevated" id="path-a" hidden>
         <h3 class="tc-h2 path-title" id="path-a-title" tabindex="-1">Route A: submit your EcoVadis scorecard</h3>
-        <ol class="steps">
-          <li>Confirm your scorecard was issued within the last 12 months.</li>
-          <li>Tell us who you are below.</li>
-          <li>Open EcoVadis and share your scorecard with The Corporate. You are then exempt from the detailed assessment and do not complete the questionnaire.</li>
-        </ol>
+        <p class="path-lead" id="a-lead">Tell us who you are, then share your scorecard with The Corporate on EcoVadis.</p>
 
         <form class="entry-form" id="a-form" novalidate>
           <div class="field">
@@ -215,7 +211,6 @@
         <p class="actions" id="a-go" hidden>
           <a class="tc-btn-primary" id="go-ecovadis" href="https://ecovadis.com" target="_blank" rel="noopener noreferrer">Go to EcoVadis</a>
         </p>
-        <p class="note">The Corporate validates EcoVadis submissions weekly.</p>
         <p class="switch"><a href="#path-b" data-switch="no">I do not have one</a></p>
       </div>
 
@@ -272,6 +267,7 @@
             <li>Do not move or rename rows or the sheet.</li>
             <li>.xlsx files only, up to 4 MB.</li>
           </ul>
+          <p class="note">We read your file to fill in the answers for you to check. The file itself is not kept.</p>
           <p class="data-notice">The Corporate (inbox@thecorporate.com) stores this data to run its 2027 supplier sustainability programme and to meet its sustainability reporting obligations, on the basis of contract or legitimate interest. It is kept until you ask for it to be deleted. It is held on Supabase (EU region) and served by Netlify. You can ask to see, correct or delete your data by contacting inbox@thecorporate.com, and you can complain to your data protection authority.</p>
           <form id="u-form" novalidate>
             <div class="field">
@@ -315,6 +311,7 @@
               <button type="button" class="tc-btn-secondary" id="r-back">Back</button>
               <button type="submit" class="tc-btn-primary" id="r-confirm" disabled>Confirm and submit</button>
             </p>
+            <p class="note" id="r-number-hint" aria-live="polite" hidden></p>
           </form>
         </div>
 

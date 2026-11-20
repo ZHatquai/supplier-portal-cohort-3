@@ -1,7 +1,8 @@
-/* Supplier Sustainability Portal: submission through the page (spec v2.0, section 04).
+/* Supplier Sustainability Portal: submission through the page (spec v2.1, section 04).
  * A Path short entry; B Path form or upload; review and confirm; confirmation.
  * Nothing is saved before the supplier confirms, and nothing is kept in the browser:
- * all state lives in memory for the visit and a reload clears it. */
+ * all state lives in memory for the visit and a reload clears it. An uploaded workbook
+ * is only read to fill in the answers; the file is never sent with the submission. */
 (function () {
   'use strict';
 
@@ -18,7 +19,8 @@
   var S1_3_NO = ((Q.questions.filter(function (q) { return q.id === 'S1-3'; })[0] || {}).options || [])
     .filter(function (o) { return /^No/.test(o); })[0] || 'No';
 
-  var state = { route: null, file: null, uploadAnswers: null };
+  var state = { route: null, uploadAnswers: null };
+  var NUMBER_QS = Q.questions.filter(function (q) { return q.number; });
 
   // A reload always returns to the neutral state: some browsers restore typed values, so clear them.
   function resetForms() { Array.prototype.forEach.call(document.querySelectorAll('form'), function (f) { f.reset(); }); }
@@ -64,6 +66,19 @@
     if (described.indexOf(id) < 0) described.push(id);
     input.setAttribute('aria-describedby', described.join(' '));
   }
+  function clearError(input) {
+    var p = $(input.id + '-err');
+    if (p) p.remove();
+    input.removeAttribute('aria-invalid');
+    var d = (input.getAttribute('aria-describedby') || '').split(' ').filter(function (x) { return x && x !== input.id + '-err'; });
+    if (d.length) input.setAttribute('aria-describedby', d.join(' ')); else input.removeAttribute('aria-describedby');
+  }
+  // The number rule (questions.js parseNumber): marks or clears one number field, returns true when valid.
+  function markNumber(input, rule) {
+    var r = Q.parseNumber(input.value, rule);
+    if (r.ok) clearError(input); else setError(input, r.message);
+    return r.ok;
+  }
   function clearErrors(scope) {
     Array.prototype.forEach.call(scope.querySelectorAll('.field-error'), function (p) { p.remove(); });
     Array.prototype.forEach.call(scope.querySelectorAll('[aria-invalid]'), function (n) {
@@ -84,6 +99,7 @@
       if (c.required && !v) msg = c.message || ('Enter ' + c.label + '.');
       else if (c.email && v && !EMAIL.test(v)) msg = 'Enter a valid email address.';
       else if (c.url && v && !/^https?:\/\/\S+$/i.test(v)) msg = 'Enter a link that starts with https://';
+      else if (c.number && v && !Q.parseNumber(v, c.number).ok) msg = Q.parseNumber(v, c.number).message;
       else if (typeof v === 'string' && v.length > MAX_TEXT) msg = 'This answer is too long. The limit is 4,000 characters.';
       if (msg) { setError(input, msg); if (!first) first = input; }
     });
@@ -134,15 +150,23 @@
     } else if (q.type === 'Open-Ended') {
       control = el('textarea', { className: 'tc-input', id: rid, name: rid, rows: '5', maxlength: String(MAX_TEXT) });
       control.value = v.response || '';
+    } else if (q.number) {
+      // number only (spec v2.1): a text field with the decimal keypad, its unit beside it
+      var uid = rid + '-unit';
+      var input = el('input', { className: 'tc-input number-input', id: rid, name: rid, type: 'text', inputmode: 'decimal', autocomplete: false, maxlength: '40', 'aria-describedby': uid, 'data-number': q.id });
+      input.value = v.response || '';
+      input.addEventListener('change', function () { markNumber(input, q.number); });
+      control = el('div', { className: 'unit-wrap' }, [input, el('span', { className: 'unit', id: uid, text: q.number.unit === '%' ? '%' : q.number.unit })]);
     } else {
       control = el('input', { className: 'tc-input', id: rid, name: rid, type: 'text', maxlength: String(MAX_TEXT) });
       control.value = v.response || '';
     }
     var note = el('textarea', { className: 'tc-input note-input', id: nid, name: nid, rows: '2', maxlength: String(MAX_TEXT) });
     note.value = v.evidence_note || '';
+    var noteLabel = ((q.number && q.number.note_label) || 'Notes and evidence') + ' (optional)';
     return el('div', { className: 'question' }, [
       el('div', { className: 'field' }, [label, control]),
-      el('div', { className: 'field' }, [el('label', { 'for': nid, className: 'note-label', text: 'Notes and evidence (optional)' }), note])
+      el('div', { className: 'field' }, [el('label', { 'for': nid, className: 'note-label', text: noteLabel }), note])
     ]);
   }
 
@@ -239,23 +263,29 @@
     }).then(function (res) {
       btn.disabled = false;
       btn.textContent = 'Save and continue';
-      $('a-go').hidden = false;
+      var go = $('a-go');
+      go.hidden = false;
       if (res.ok) {
+        // one next step: share the scorecard on EcoVadis, with Go to EcoVadis as the single action
         aForm.hidden = true;
+        $('a-lead').hidden = true;
         var done = $('a-done');
         done.textContent = '';
-        done.appendChild(el('p', { className: 'tc-h3', text: 'Details saved' }));
-        done.appendChild(el('p', { text: 'Saved on ' + res.data.date + ' for ' + res.data.company_name + '. Reference ' + res.data.reference + '.' }));
-        done.appendChild(el('p', { text: 'Now open EcoVadis and share your scorecard with The Corporate.' }));
+        var heading = el('h4', { className: 'tc-h2 done-title', id: 'a-done-title', tabindex: '-1', text: 'One step left' });
+        done.appendChild(heading);
+        done.appendChild(el('p', { className: 'done-line', text: 'Share your scorecard with The Corporate on EcoVadis.' }));
+        done.appendChild(go);
+        done.appendChild(el('p', { className: 'done-small', text: 'Saved on ' + res.data.date + ' for ' + res.data.company_name + '. Reference ' + res.data.reference + '.' }));
         done.hidden = false;
-        done.focus();
+        heading.focus();
       } else if (res.status === 400 && res.data.fields) {
         Object.keys(res.data.fields).forEach(function (f) { var n = $('a-' + f); if (n) setError(n, res.data.fields[f]); });
         var first = aForm.querySelector('[aria-invalid]');
         if (first) first.focus();
-        $('a-go').hidden = true;
+        go.hidden = true;
       } else {
         showStatus($('a-error'), SAVE_ERROR, saveA);
+        $('a-error').parentNode.insertBefore(go, $('a-error').nextSibling);
         $('a-error').focus && $('a-error').setAttribute('tabindex', '-1');
         $('a-error').focus();
       }
@@ -275,7 +305,7 @@
       { id: 'q-contact_email', label: 'contact email', required: true, email: true }
     ];
     Q.questions.forEach(function (q) {
-      checks.push({ id: 'q-' + q.id + '-r', label: 'an answer' });
+      checks.push({ id: 'q-' + q.id + '-r', label: 'an answer', number: q.number || null });
       checks.push({ id: 'q-' + q.id + '-n', label: 'a note' });
     });
     var bad = check($('q-form'), checks);
@@ -329,7 +359,6 @@
         btn.textContent = 'Read the file';
         if (!res.ok || !res.data.answers) { showStatus(box, res.data.error || READ_ERROR); return; }
         state.route = 'upload';
-        state.file = { name: file.name, base64: b64 };
         state.uploadAnswers = res.data.answers;
         var h = splitHints(res.data.answers);
         ['company_name', 'company_country', 'contact_name', 'contact_title', 'contact_email'].forEach(function (f) { $('r-' + f).value = h.hint[f] || ''; });
@@ -352,7 +381,7 @@
           var response = q.id === 'S1-3' ? S1_3_NO : val('q-' + q.id + '-r');
           var note = q.id === 'S1-3' ? '' : val('q-' + q.id + '-n');
           dl.appendChild(el('dt', {}, [el('span', { className: 'q-id', text: q.id }), el('span', { className: 'q-text', text: q.id === 'S1-3' ? firstSentence(q.text) : q.text })]));
-          dl.appendChild(el('dd', { text: response || 'No answer' }));
+          dl.appendChild(el('dd', { text: response ? response + (q.number ? ' ' + q.number.unit : '') : 'No answer' }));
           if (note) dl.appendChild(el('dd', { className: 'review-note', text: 'Notes and evidence: ' + note }));
         });
         g.appendChild(dl);
@@ -377,8 +406,14 @@
         });
         root.appendChild(g);
       });
+      // a number cell that holds text is marked for correction, not refused (spec v2.1)
+      NUMBER_QS.forEach(function (q) { var n = $('r-' + q.id + '-r'); if (n && n.value.trim()) markNumber(n, q.number); });
       $('r-edit-wrap').hidden = true;
     }
+  }
+  function numbersValid() {
+    if (state.route !== 'upload') return true;
+    return NUMBER_QS.every(function (q) { var n = $('r-' + q.id + '-r'); return !n || Q.parseNumber(n.value, q.number).ok; });
   }
 
   function updateDateShown() {
@@ -389,9 +424,19 @@
 
   function reviewComplete() {
     return ['r-company_name', 'r-company_country', 'r-contact_name', 'r-declaration_name', 'r-declaration_date'].every(function (id) { return val(id); }) &&
-      EMAIL.test(val('r-contact_email')) && $('r-declaration_confirmed').checked;
+      EMAIL.test(val('r-contact_email')) && $('r-declaration_confirmed').checked && numbersValid();
   }
-  function updateConfirm() { $('r-confirm').disabled = saving || !reviewComplete(); updateDateShown(); }
+  function updateConfirm() {
+    $('r-confirm').disabled = saving || !reviewComplete();
+    updateDateShown();
+    // name the number answers still to correct, so a disabled button is never a puzzle
+    var hint = $('r-number-hint');
+    var bad = state.route !== 'upload' ? [] : NUMBER_QS.filter(function (q) {
+      var n = $('r-' + q.id + '-r'); return n && !Q.parseNumber(n.value, q.number).ok;
+    }).map(function (q) { return q.id; });
+    hint.hidden = !bad.length;
+    hint.textContent = bad.length ? 'Correct the marked number ' + (bad.length === 1 ? 'answer' : 'answers') + ' before you submit: ' + bad.join(', ') + '.' : '';
+  }
 
   function openReview() {
     $('decl-text').textContent = Q.declaration;
@@ -403,7 +448,13 @@
     showPanel('review');
   }
 
-  $('r-form').addEventListener('input', updateConfirm);
+  $('r-form').addEventListener('input', function (e) {
+    var t = e.target;
+    var q = t && t.getAttribute && t.getAttribute('data-number');
+    // clear a number field's mark as soon as it holds a valid number (marked again on change if not)
+    if (q && Q.parseNumber(t.value, NUMBER_QS.filter(function (x) { return x.id === q; })[0].number).ok) clearError(t);
+    updateConfirm();
+  });
   $('r-form').addEventListener('change', updateConfirm);
   $('r-edit').addEventListener('click', function () {
     ['company_name', 'company_country', 'contact_name', 'contact_title', 'contact_email'].forEach(function (f) { $('q-' + f).value = val('r-' + f); });
@@ -430,7 +481,7 @@
     ];
     if (state.route === 'upload') {
       Q.questions.forEach(function (q) {
-        checks.push({ id: 'r-' + q.id + '-r', label: 'an answer' });
+        checks.push({ id: 'r-' + q.id + '-r', label: 'an answer', number: q.number || null });
         checks.push({ id: 'r-' + q.id + '-n', label: 'a note' });
       });
     }
@@ -452,7 +503,6 @@
       answers: answers
     };
     if (body.ecovadis_link && !/^https?:\/\//i.test(body.ecovadis_link)) body.ecovadis_link = '';
-    if (state.route === 'upload') { body.fileName = state.file.name; body.fileBase64 = state.file.base64; }
 
     saving = true;
     var btn = $('r-confirm');
