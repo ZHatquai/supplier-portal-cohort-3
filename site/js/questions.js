@@ -90,7 +90,11 @@
         "esrs": "E1-4",
         "type": "Quantitative",
         "text": "Total Scope 1 emissions for last fiscal year (metric tonnes CO₂e). Include verification method.",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "tCO2e",
+          "note_label": "Verification method and notes"
+        }
       },
       {
         "id": "S2-2",
@@ -99,7 +103,10 @@
         "esrs": "E1-4",
         "type": "Quantitative",
         "text": "Total Scope 2 emissions for last fiscal year — market-based (metric tonnes CO₂e).",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "tCO2e"
+        }
       },
       {
         "id": "S2-3",
@@ -108,7 +115,11 @@
         "esrs": "E1-4",
         "type": "Quantitative",
         "text": "Total Scope 3 emissions for last fiscal year (metric tonnes CO₂e). Specify categories included.",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "tCO2e",
+          "note_label": "Categories included and notes"
+        }
       },
       {
         "id": "S2-4",
@@ -148,7 +159,10 @@
         "esrs": "E2-3",
         "type": "Quantitative",
         "text": "Total weight of substances of concern (REACH, SVHC list) used in production last fiscal year (kg).",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "kg"
+        }
       },
       {
         "id": "S3-2",
@@ -188,7 +202,11 @@
         "esrs": "E3-1",
         "type": "Quantitative",
         "text": "Total water withdrawal last fiscal year (m³). Specify source (municipal, groundwater, surface).",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "m3",
+          "note_label": "Source and notes"
+        }
       },
       {
         "id": "S4-2",
@@ -228,7 +246,11 @@
         "esrs": "E5-2",
         "type": "Quantitative",
         "text": "Total waste generated last fiscal year (tonnes). Breakdown: landfill / recycled / energy recovery / hazardous.",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "tonnes",
+          "note_label": "Breakdown and notes"
+        }
       },
       {
         "id": "S5-2",
@@ -237,7 +259,11 @@
         "esrs": "E5-4",
         "type": "Quantitative",
         "text": "Percentage of post-consumer recycled (PCR) content in the components supplied to The Corporate (%).",
-        "required": false
+        "required": false,
+        "number": {
+          "unit": "%",
+          "max": 100
+        }
       },
       {
         "id": "S5-3",
@@ -347,6 +373,22 @@
       }
     ],
     "declaration": "DECLARATION: I confirm that the information provided in this assessment is accurate and complete to the best of my knowledge."
+  };
+
+  // The number rule (spec v2.1, Section 9), one definition for the page and the submit function.
+  // Accepts digits with an optional decimal point; a comma only as a thousands separator in groups of three.
+  // Returns { ok: true, value } with the separators removed ('' when empty), or { ok: false, message }.
+  data.NUMBER_MESSAGE = 'Enter a number only, for example 12345 or 12,345.6. Put any other detail in the notes.';
+  data.PERCENT_MESSAGE = 'Enter a percentage from 0 to 100.';
+  data.parseNumber = function (raw, rule) {
+    var s = String(raw == null ? '' : raw).trim();
+    if (s === '') return { ok: true, value: '' };
+    var max = rule && typeof rule.max === 'number' ? rule.max : null;
+    var message = max === null ? data.NUMBER_MESSAGE : data.PERCENT_MESSAGE;
+    if (!/^(\d{1,3}(,\d{3})+|\d+)(\.\d+)?$/.test(s)) return { ok: false, message: message };
+    var value = s.replace(/,/g, '');
+    if (max !== null && Number(value) > max) return { ok: false, message: message };
+    return { ok: true, value: value };
   };
   if (typeof module !== 'undefined' && module.exports) { module.exports = data; } else { root.TC_QUESTIONS = data; }
 })(typeof window !== 'undefined' ? window : this);

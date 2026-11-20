@@ -1,10 +1,11 @@
-// Validates a submission exactly as product-spec.md v2.0 Sections 5 and 9 state it.
+// Validates a submission exactly as product-spec.md v2.1 Sections 5 and 9 state it.
 // Returns { errors } (field -> message) or { value } (the cleaned payload for create_submission).
 'use strict';
 
 const Q = require('../../site/js/questions.js');
 
 const QUESTION_IDS = new Set(Q.questions.map((q) => q.id));
+const NUMBER_RULES = new Map(Q.questions.filter((q) => q.number).map((q) => [q.id, q.number]));
 const ROUTES = new Set(['ecovadis', 'form', 'upload']);
 const MAX_TEXT = 4000;
 const S1_3_FORM_VALUE = (Q.questions.find((q) => q.id === 'S1-3').options || []).find((o) => /^No/.test(o));
@@ -89,6 +90,14 @@ function validateSubmission(body) {
         const response = typeof a.response === 'string' ? a.response.trim() : '';
         const note = typeof a.evidence_note === 'string' ? a.evidence_note.trim() : '';
         if (response.length > MAX_TEXT || note.length > MAX_TEXT) { errors['answer_' + id] = 'This answer is too long. The limit is 4,000 characters.'; continue; }
+        // the number rule: a number only, stored without separators (spec v2.1, Section 9)
+        const rule = NUMBER_RULES.get(id);
+        if (rule) {
+          const n = Q.parseNumber(response, rule);
+          if (!n.ok) { errors['answer_' + id] = n.message; continue; }
+          answers.push({ question_id: id, response: n.value, evidence_note: note });
+          continue;
+        }
         answers.push({ question_id: id, response, evidence_note: note });
       }
       if (!errors.answers) {

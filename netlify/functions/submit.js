@@ -1,20 +1,20 @@
 // submit: the only write path into the database (docs/access-matrix.md Section 6, lines 1, 3 and 5).
 // It holds the secret key, so RLS does not apply to it: it validates every field itself and does nothing
-// except the validated inserts (through create_submission), the supersede step and the file upload.
+// except the validated inserts and the supersede step (through create_submission).
+// Since v2.1 it stores no file and refuses any request that carries one: an uploaded workbook is only
+// read by parse-workbook, and the answers the supplier confirms are the submission.
 // It never stores or logs the visitor's IP.
 'use strict';
 
 const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 const { validateSubmission } = require('../lib/validate.js');
-const { readWorkbook, ReadError, MAX_FILE_BYTES } = require('../lib/workbook.js');
 const { json, readBody } = require('../lib/http.js');
 
-const MAX_FIELDS_BYTES = 300 * 1024;              // the form fields and answers
-const MAX_REQUEST_BYTES = 5.8 * 1024 * 1024;      // fields plus a 4 MB file, base64-encoded
+const MAX_REQUEST_BYTES = 300 * 1024; // the fields and the answers; no file travels here
 const SAVE_ERROR = 'We could not save your submission. Nothing was recorded. Please try again.';
-const XLSX_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const FILE_KEYS = ['file', 'fileBase64', 'fileName', 'file_path'];
 
 function displayDate(iso) {
   const d = new Date(iso);
@@ -27,40 +27,19 @@ function supabaseUrl() {
   return candidates.find((u) => typeof u === 'string' && /^https:\/\//.test(u)) || '';
 }
 
-function safeFileName(name) {
-  const base = String(name || 'questionnaire.xlsx').split(/[\\/]/).pop();
-  const cleaned = base.replace(/[^A-Za-z0-9._ -]/g, '_').replace(/\s+/g, ' ').trim().slice(0, 120);
-  return /\.xlsx$/i.test(cleaned) ? cleaned : 'questionnaire.xlsx';
-}
-
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed.' });
 
   const { data, error } = readBody(event, MAX_REQUEST_BYTES);
-  if (error) return error;
+  if (error) return error.statusCode === 413 ? json(413, { error: 'The submission is too large.' }) : error;
   if (!data || typeof data !== 'object' || Array.isArray(data)) return json(400, { error: 'The request could not be read.' });
 
-  const { fileBase64, fileName, ...fields } = data;
-  if (Buffer.byteLength(JSON.stringify(fields), 'utf8') > MAX_FIELDS_BYTES) {
-    return json(413, { error: 'The submission is too large.' });
+  if (FILE_KEYS.some((k) => k in data)) {
+    return json(400, { error: 'Files are not accepted here. Only your confirmed answers are submitted. Nothing was recorded.' });
   }
 
-  const { value, errors } = validateSubmission(fields);
+  const { value, errors } = validateSubmission(data);
   if (errors) return json(400, { error: 'Please check the highlighted fields.', fields: errors });
-
-  let fileBuffer = null;
-  if (value.route === 'upload') {
-    if (typeof fileBase64 !== 'string' || !fileBase64) return json(400, { error: 'The file is missing.', fields: { file: 'Choose the filled workbook.' } });
-    fileBuffer = Buffer.from(fileBase64, 'base64');
-    if (fileBuffer.length > MAX_FILE_BYTES) return json(413, { error: 'This file is larger than 4 MB.' });
-    try {
-      await readWorkbook(fileBuffer, fileName); // the stored file must be the readable workbook
-    } catch (e) {
-      return json(e instanceof ReadError ? e.status : 400, { error: e.message || 'We could not read this file.' });
-    }
-  } else if (fileBase64) {
-    return json(400, { error: 'Only the upload route takes a file.' });
-  }
 
   const url = supabaseUrl();
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -71,23 +50,9 @@ exports.handler = async (event) => {
   const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 
   const id = crypto.randomUUID();
-  let filePath = null;
-  if (fileBuffer) {
-    filePath = id + '/' + safeFileName(fileName);
-    const up = await db.storage.from('submission-files').upload(filePath, fileBuffer, { contentType: XLSX_TYPE, upsert: false });
-    if (up.error) {
-      console.error('submit: file upload failed', up.error.message);
-      return json(500, { error: SAVE_ERROR });
-    }
-  }
-
-  const { data: rows, error: rpcError } = await db.rpc('create_submission', {
-    payload: { ...value, id, file_path: filePath },
-  });
+  const { data: rows, error: rpcError } = await db.rpc('create_submission', { payload: { ...value, id } });
   if (rpcError || !rows || !rows.length) {
     console.error('submit: create_submission failed', rpcError && rpcError.message);
-    // remove the file this request just stored, so nothing is left without its submission
-    if (filePath) await db.storage.from('submission-files').remove([filePath]);
     return json(500, { error: SAVE_ERROR });
   }
 

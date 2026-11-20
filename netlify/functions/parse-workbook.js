@@ -1,5 +1,5 @@
 // parse-workbook: reads an uploaded questionnaire and returns its answers for the supplier to review.
-// It touches no table and no bucket, and keeps nothing (docs/access-matrix.md Section 1).
+// It touches no table and no storage, and keeps nothing (docs/access-matrix.md Section 1).
 'use strict';
 
 const { readWorkbook, ReadError, READ_ERROR } = require('../lib/workbook.js');

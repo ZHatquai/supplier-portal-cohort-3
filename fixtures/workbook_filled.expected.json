@@ -22,17 +22,17 @@
   },
   {
    "question_id": "S2-1",
-   "response": "Fixture response S2-1",
+   "response": "12345.6",
    "evidence_note": "Fixture note S2-1"
   },
   {
    "question_id": "S2-2",
-   "response": "Fixture response S2-2",
+   "response": "2345",
    "evidence_note": "Fixture note S2-2"
   },
   {
    "question_id": "S2-3",
-   "response": "Fixture response S2-3",
+   "response": "123456",
    "evidence_note": "Fixture note S2-3"
   },
   {
@@ -52,7 +52,7 @@
   },
   {
    "question_id": "S3-1",
-   "response": "Fixture response S3-1",
+   "response": "850",
    "evidence_note": "Fixture note S3-1"
   },
   {
@@ -72,7 +72,7 @@
   },
   {
    "question_id": "S4-1",
-   "response": "Fixture response S4-1",
+   "response": "45000",
    "evidence_note": "Fixture note S4-1"
   },
   {
@@ -92,12 +92,12 @@
   },
   {
    "question_id": "S5-1",
-   "response": "Fixture response S5-1",
+   "response": "1200.5",
    "evidence_note": "Fixture note S5-1"
   },
   {
    "question_id": "S5-2",
-   "response": "Fixture response S5-2",
+   "response": "35",
    "evidence_note": "Fixture note S5-2"
   },
   {

@@ -1,5 +1,5 @@
-// Reads the filled questionnaire workbook. Used by parse-workbook (to show the answers for review)
-// and by submit (to re-check the file before it is stored). Stores nothing, executes nothing.
+// Reads the filled questionnaire workbook. Used by parse-workbook to show the answers for review.
+// The file is read in memory and discarded: nothing is stored, nothing is executed.
 'use strict';
 
 const ExcelJS = require('exceljs');
