@@ -125,12 +125,12 @@
         <article class="tc-card">
           <p class="tc-label">Route A</p>
           <h3 class="tc-h3">EcoVadis</h3>
-          <p>Hold a valid EcoVadis scorecard? Submit it and you are exempt from the detailed assessment. Validations are processed weekly.</p>
+          <p>Hold a valid EcoVadis scorecard? Tell us who you are, then submit it on EcoVadis and you are exempt from the detailed assessment. Validations are processed weekly.</p>
         </article>
         <article class="tc-card">
           <p class="tc-label">Route B</p>
           <h3 class="tc-h3">Full assessment</h3>
-          <p>No current scorecard? Complete The Corporate's sustainability assessment across the priority themes and return it by email.</p>
+          <p>No current scorecard? Complete The Corporate's sustainability assessment across the priority themes and submit it on this page, by filling in the form or by uploading the completed Excel workbook.</p>
         </article>
       </div>
 
@@ -182,13 +182,33 @@
       <!-- A Path -->
       <div class="path tc-card-elevated" id="path-a" hidden>
         <h3 class="tc-h2 path-title" id="path-a-title" tabindex="-1">Route A: submit your EcoVadis scorecard</h3>
-        <ol class="steps">
-          <li>Confirm your scorecard was issued within the last 12 months.</li>
-          <li>Open EcoVadis and share your scorecard with The Corporate.</li>
-          <li>You are finished. You are exempt from the detailed assessment and do not complete the questionnaire.</li>
-        </ol>
-        <p class="note">The Corporate validates EcoVadis submissions weekly.</p>
-        <p class="actions">
+        <p class="path-lead" id="a-lead">Tell us who you are, then share your scorecard with The Corporate on EcoVadis.</p>
+
+        <form class="entry-form" id="a-form" novalidate>
+          <div class="field">
+            <label for="a-company_name">Company name <span class="req">(required)</span></label>
+            <input class="tc-input" id="a-company_name" name="company_name" type="text" autocomplete="organization" maxlength="300" required>
+          </div>
+          <div class="field">
+            <label for="a-contact_name">Contact name <span class="req">(required)</span></label>
+            <input class="tc-input" id="a-contact_name" name="contact_name" type="text" autocomplete="name" maxlength="200" required>
+          </div>
+          <div class="field">
+            <label for="a-contact_email">Contact email <span class="req">(required)</span></label>
+            <input class="tc-input" id="a-contact_email" name="contact_email" type="email" autocomplete="email" maxlength="320" required>
+          </div>
+          <div class="field">
+            <label for="a-ecovadis_link">EcoVadis scorecard link <span class="opt">(optional)</span></label>
+            <input class="tc-input" id="a-ecovadis_link" name="ecovadis_link" type="url" inputmode="url" maxlength="2000" placeholder="https://">
+          </div>
+          <p class="data-notice">The Corporate (inbox@thecorporate.com) stores this data to run its 2027 supplier sustainability programme and to meet its sustainability reporting obligations, on the basis of contract or legitimate interest. It is kept until you ask for it to be deleted. It is held on Supabase (EU region) and served by Netlify. You can ask to see, correct or delete your data by contacting inbox@thecorporate.com, and you can complain to your data protection authority.</p>
+          <p class="actions"><button type="submit" class="tc-btn-primary" id="a-save">Save and continue</button></p>
+        </form>
+
+        <div class="status-box" id="a-error" role="alert" hidden></div>
+        <div class="confirm-box" id="a-done" tabindex="-1" hidden></div>
+
+        <p class="actions" id="a-go" hidden>
           <a class="tc-btn-primary" id="go-ecovadis" href="https://ecovadis.com" target="_blank" rel="noopener noreferrer">Go to EcoVadis</a>
         </p>
         <p class="switch"><a href="#path-b" data-switch="no">I do not have one</a></p>
@@ -210,20 +230,94 @@
         </ul>
 
         <ol class="steps">
-          <li>Download the questionnaire (Excel).</li>
-          <li>Complete every section marked Required, S1 to S7, and sign the declaration at the end.</li>
-          <li>Save the file under your company name.</li>
-          <li>Return it by email.</li>
+          <li>Choose how to submit: fill in the form on this page, or complete the Excel questionnaire and upload it.</li>
+          <li>Review your answers and complete the declaration.</li>
+          <li>Confirm and submit. You see a confirmation with the date.</li>
         </ol>
 
         <p class="actions">
-          <a class="tc-btn-primary" id="download-xlsx" href="/downloads/The_Corporate_Supplier_Questionnaire_2026.xlsx" download>Download questionnaire (.xlsx)</a>
+          <a class="tc-btn-secondary" id="download-xlsx" href="/downloads/The_Corporate_Supplier_Questionnaire_2026.xlsx" download>Download questionnaire (.xlsx)</a>
           <span class="file-meta">Microsoft Excel · The_Corporate_Supplier_Questionnaire_2026.xlsx</span>
         </p>
-        <p class="actions">
-          <a class="tc-btn-secondary" id="return-email" href="mailto:inbox@thecorporate.com?subject=Supplier%20Sustainability%20Assessment%202026%3A%20%5BCompany%20name%5D&amp;body=Please%20find%20our%20completed%20Supplier%20Sustainability%20Assessment%20attached.%0D%0A%0D%0ACompany%20name%3A%20">Return by email</a>
-          <span class="file-meta">Send to <strong>inbox@thecorporate.com</strong> and attach the completed workbook.</span>
-        </p>
+
+        <div id="b-start">
+          <h4 class="tc-label ways-label" id="ways-label">How do you want to submit?</h4>
+          <div class="ways" role="group" aria-labelledby="ways-label">
+            <button type="button" class="tc-btn-secondary way-btn" id="way-form" aria-pressed="false" aria-expanded="false" aria-controls="panel-form">Fill in the form</button>
+            <button type="button" class="tc-btn-secondary way-btn" id="way-upload" aria-pressed="false" aria-expanded="false" aria-controls="panel-upload">Upload the filled workbook</button>
+          </div>
+        </div>
+
+        <!-- Fill in the form -->
+        <div class="panel" id="panel-form" hidden>
+          <h4 class="tc-h3 panel-title" id="panel-form-title" tabindex="-1">The questionnaire</h4>
+          <p class="data-notice">The Corporate (inbox@thecorporate.com) stores this data to run its 2027 supplier sustainability programme and to meet its sustainability reporting obligations, on the basis of contract or legitimate interest. It is kept until you ask for it to be deleted. It is held on Supabase (EU region) and served by Netlify. You can ask to see, correct or delete your data by contacting inbox@thecorporate.com, and you can complain to your data protection authority.</p>
+          <p class="note">Fields marked required must be completed. Enter business information only.</p>
+          <form id="q-form" novalidate>
+            <div id="q-fields"></div>
+            <p class="actions"><button type="submit" class="tc-btn-primary">Review your answers</button></p>
+          </form>
+        </div>
+
+        <!-- Upload the filled workbook -->
+        <div class="panel" id="panel-upload" hidden>
+          <h4 class="tc-h3 panel-title" id="panel-upload-title" tabindex="-1">Upload the filled workbook</h4>
+          <ul class="rules">
+            <li>Use the questionnaire downloaded from this page.</li>
+            <li>Do not move or rename rows or the sheet.</li>
+            <li>.xlsx files only, up to 4 MB.</li>
+          </ul>
+          <p class="note">We read your file to fill in the answers for you to check. The file itself is not kept.</p>
+          <p class="data-notice">The Corporate (inbox@thecorporate.com) stores this data to run its 2027 supplier sustainability programme and to meet its sustainability reporting obligations, on the basis of contract or legitimate interest. It is kept until you ask for it to be deleted. It is held on Supabase (EU region) and served by Netlify. You can ask to see, correct or delete your data by contacting inbox@thecorporate.com, and you can complain to your data protection authority.</p>
+          <form id="u-form" novalidate>
+            <div class="field">
+              <label for="u-file">Filled workbook (.xlsx)</label>
+              <input class="tc-input file-input" id="u-file" name="file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            </div>
+            <div class="status-box" id="u-error" role="alert" hidden></div>
+            <p class="actions"><button type="submit" class="tc-btn-primary" id="u-read">Read the file</button></p>
+            <p class="note">Reading the file saves nothing. You review the answers before anything is submitted.</p>
+          </form>
+        </div>
+
+        <!-- Review and confirm -->
+        <div class="panel" id="panel-review" hidden>
+          <h4 class="tc-h3 panel-title" id="panel-review-title" tabindex="-1">Review and confirm</h4>
+          <p class="note">Check every answer. Nothing is saved until you press Confirm and submit.</p>
+          <form id="r-form" novalidate>
+            <fieldset class="group">
+              <legend class="tc-label">Company and contact</legend>
+              <div class="field"><label for="r-company_name">Company name <span class="req">(required)</span></label><input class="tc-input" id="r-company_name" name="company_name" type="text" autocomplete="organization" maxlength="300" required></div>
+              <div class="field"><label for="r-company_country">Registered country <span class="req">(required)</span></label><input class="tc-input" id="r-company_country" name="company_country" type="text" autocomplete="country-name" maxlength="200" required></div>
+              <div class="field"><label for="r-contact_name">Contact name <span class="req">(required)</span></label><input class="tc-input" id="r-contact_name" name="contact_name" type="text" autocomplete="name" maxlength="200" required></div>
+              <div class="field"><label for="r-contact_title">Contact title <span class="opt">(optional)</span></label><input class="tc-input" id="r-contact_title" name="contact_title" type="text" autocomplete="organization-title" maxlength="200"></div>
+              <div class="field"><label for="r-contact_email">Contact email <span class="req">(required)</span></label><input class="tc-input" id="r-contact_email" name="contact_email" type="email" autocomplete="email" maxlength="320" required></div>
+            </fieldset>
+
+            <div id="r-answers"></div>
+            <p class="actions" id="r-edit-wrap"><button type="button" class="tc-btn-secondary" id="r-edit">Edit answers</button></p>
+
+            <fieldset class="group declaration">
+              <legend class="tc-label">Declaration</legend>
+              <p id="decl-text"></p>
+              <div class="field"><label for="r-declaration_name">Authorised signatory name <span class="req">(required)</span></label><input class="tc-input" id="r-declaration_name" name="declaration_name" type="text" autocomplete="name" maxlength="200" required></div>
+              <div class="field"><label for="r-declaration_date">Date <span class="req">(required)</span></label><input class="tc-input date-input" id="r-declaration_date" name="declaration_date" type="date" required aria-describedby="r-date-shown"><span class="date-shown" id="r-date-shown"></span></div>
+              <div class="field check"><input id="r-declaration_confirmed" name="declaration_confirmed" type="checkbox" required><label for="r-declaration_confirmed">I confirm that the information provided is accurate and complete</label></div>
+            </fieldset>
+
+            <p class="data-notice">The Corporate (inbox@thecorporate.com) stores this data to run its 2027 supplier sustainability programme and to meet its sustainability reporting obligations, on the basis of contract or legitimate interest. It is kept until you ask for it to be deleted. It is held on Supabase (EU region) and served by Netlify. You can ask to see, correct or delete your data by contacting inbox@thecorporate.com, and you can complain to your data protection authority.</p>
+            <div class="status-box" id="r-error" role="alert" hidden></div>
+            <p class="actions">
+              <button type="button" class="tc-btn-secondary" id="r-back">Back</button>
+              <button type="submit" class="tc-btn-primary" id="r-confirm" disabled>Confirm and submit</button>
+            </p>
+            <p class="note" id="r-number-hint" aria-live="polite" hidden></p>
+          </form>
+        </div>
+
+        <!-- Confirmation -->
+        <div class="panel confirm-box" id="panel-done" tabindex="-1" hidden></div>
+
         <p class="note">Answers on PFAS are reviewed by The Corporate's EHS team.</p>
         <p class="switch"><a href="#path-a" data-switch="yes">I have a scorecard after all</a></p>
       </div>
@@ -243,12 +337,15 @@
     </div>
     <div>
       <p class="tc-label footer-label">Questions about this programme?</p>
-      <p><a class="footer-mail" href="mailto:inbox@thecorporate.com">inbox@thecorporate.com</a></p>
-      <p class="footer-line">This page does not collect or store any information about you.</p>
+      <p class="footer-mail">inbox@thecorporate.com</p>
+      <p class="footer-line">Data you submit on this page is stored by The Corporate. This page uses no cookies and no tracking.</p>
+      <p class="footer-line"><a href="about.html">About this tool</a></p>
     </div>
   </div>
 </footer>
 
+<script src="js/questions.js"></script>
 <script src="js/main.js"></script>
+<script src="js/submit.js"></script>
 </body>
 </html>
