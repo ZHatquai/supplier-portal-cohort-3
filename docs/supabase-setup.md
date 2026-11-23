@@ -116,6 +116,8 @@ To be verified once the builder connects the extension; corrected here if the na
 - The Supabase security advisor reports "RLS enabled, no policy" (INFO) on both tables. That is intended: no role may read or write except the secret-key functions.
 - The project was created by the builder with the platform's "auto-enable RLS" event trigger; it is kept.
 - Rebuilding on a fresh project: the second migration revokes execute on public.rls_auto_enable(), a function the platform created with this project. On a project without it, skip that file (or create the project with the auto-enable RLS option).
+- 23 November 2026: the builder deleted all test rows and the 3 files in submission-files; the empty bucket itself still exists (D21 open until it is deleted on the Storage page).
+- 23 November 2026: mock Wave 1 seed loaded for the dashboard design (fixtures/seed-wave1-28.sql): 28 submissions (17 ecovadis, 11 form, all received) and 330 answers. Every seeded contact email ends in @example.com and every scorecard link is on ecovadis.example.com. Data only, no schema change, no migration. Remove before the first supplier wave with the delete block at the end of that file (answers first, then submissions, where contact_email like '%@example.com').
 - This container cannot reach supabase.co (network policy); the API-side refusal check runs from the Deploy Preview.
 
 ## 10. Change log
